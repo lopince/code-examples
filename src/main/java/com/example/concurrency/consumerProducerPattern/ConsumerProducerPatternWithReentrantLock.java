@@ -14,10 +14,10 @@ public class ConsumerProducerPatternWithReentrantLock {
     private static Lock lock = new ReentrantLock();
 
     // consumer 的等待条件。相当于一个读锁
-    private static Condition notEmpty = lock.newCondition();
+    private static Condition readLock = lock.newCondition();
 
     // provider 的等待条件。相当于一个写锁
-    private static Condition notFull = lock.newCondition();
+    private static Condition writeLock = lock.newCondition();
 
     public static void main(String[] args) {
 
@@ -42,7 +42,7 @@ public class ConsumerProducerPatternWithReentrantLock {
                 while (count == MAX) {
                     try {
                         // 等待写锁
-                        notFull.await();
+                        writeLock.await();
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -52,7 +52,7 @@ public class ConsumerProducerPatternWithReentrantLock {
                 System.out.println(String.format("[Producer %s] Produced, count: %s", Thread.currentThread().getId(), count));
 
                 // 唤醒被读锁阻塞的对象
-                notEmpty.signal();
+                readLock.signal();
 
                 lock.unlock();
             }
@@ -72,7 +72,7 @@ public class ConsumerProducerPatternWithReentrantLock {
 
                 while (count == 0){
                     try{
-                        notEmpty.await();
+                        readLock.await();
                     }catch (Exception e){
                         e.printStackTrace();
                     }
@@ -81,7 +81,7 @@ public class ConsumerProducerPatternWithReentrantLock {
                 count--;
                 System.out.println(String.format("[Consumer %s] Consumed, count: %s", Thread.currentThread().getId(), count));
 
-                notFull.signal();
+                writeLock.signal();
 
                 lock.unlock();
             }

@@ -43,6 +43,7 @@ public class ReentrantLockTest {
     }
 
     private static void add() {
+        
         lock.lock();
         try {
             count++;

@@ -6,7 +6,7 @@ public class ConsumerProducerPatternWithWaitNotify {
 
     private static final Integer MAX = 10;
 
-    private static int count = 0;
+    private static volatile int count = 0;
     private static Object lock = new Object();
 
     public static void main(String[] args) {
